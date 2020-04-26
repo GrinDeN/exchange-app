@@ -1,8 +1,8 @@
 package io.github.grinden.exchange.core.exchange;
 
-import java.math.BigDecimal;
+import io.github.grinden.exchange.core.exchange.model.ExchangeOperation;
 
 public interface ExchangeService {
 
-    String exchange(String currentCurrency, String desiredCurrency, BigDecimal amount);
+    void exchange(ExchangeOperation exchangeOperation);
 }

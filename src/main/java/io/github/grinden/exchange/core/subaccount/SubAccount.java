@@ -39,7 +39,7 @@ public class SubAccount {
         this.id = id;
     }
 
-    CurrencyUnit getCurrency() {
+    public CurrencyUnit getCurrency() {
         return currency;
     }
 
@@ -47,11 +47,11 @@ public class SubAccount {
         this.currency = currency;
     }
 
-    BigDecimal getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    void setAmount(final BigDecimal amount) {
+    public void setAmount(final BigDecimal amount) {
         this.amount = amount;
     }
 }

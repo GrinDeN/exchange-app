@@ -52,7 +52,7 @@ public class Account {
         this.surname = surname;
     }
 
-    List<SubAccount> getSubAccounts() {
+    public List<SubAccount> getSubAccounts() {
         return subAccounts;
     }
 
