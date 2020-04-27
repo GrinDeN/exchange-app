@@ -35,7 +35,7 @@ funds from PLN account.
 Example SELL body: <br>
 {<br>
     "pesel": "87042051771", <br>
-    "exchangeType": "BUY", <br>
+    "exchangeType": "SELL", <br>
     "currency": "USD", <br>
     "amount": 10.75 <br>
 }<br>
