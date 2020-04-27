@@ -1,5 +1,7 @@
 package io.github.grinden.exchange.core.rate.model;
 
+import io.github.grinden.exchange.configuration.InvalidExchangeArgument;
+import io.github.grinden.exchange.configuration.ServiceUnavailableException;
 import io.github.grinden.exchange.core.currency.CurrencyUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +27,10 @@ public class NbpRateRepository implements RateRepository {
         String url = String.format(NBP_URL, currency);
         ResponseEntity<NbpRate> response = restTemplate.getForEntity(url, NbpRate.class);
         if (response.getStatusCode() == HttpStatus.SERVICE_UNAVAILABLE) {
-            throw new IllegalStateException(String.format("Cannot get rate for %s - service is unavailable", currency));
+            throw new ServiceUnavailableException(String.format("Cannot get rate for %s - service is unavailable", currency));
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
-            throw new IllegalStateException(String.format("Cannot get rate - currency %s is invalid", currency));
+            throw new InvalidExchangeArgument(String.format("Cannot get rate - currency %s is invalid", currency));
         }
         return response.getBody();
     }

@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(path = "/exchange")
 public class ExchangeEndpoint {
@@ -22,7 +24,7 @@ public class ExchangeEndpoint {
     }
 
     @PostMapping(path = "/accounts", consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> registerAccount(@RequestBody Account account) {
+    ResponseEntity<?> registerAccount(@RequestBody @Valid Account account) {
         this.accountService.registerAccount(account);
         return ResponseEntity.noContent().build();
     }
@@ -34,7 +36,7 @@ public class ExchangeEndpoint {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> exchangeCurrency(@RequestBody ExchangeOperation exchangeOperation) {
+    ResponseEntity<?> exchangeCurrency(@RequestBody @Valid ExchangeOperation exchangeOperation) {
         this.exchangeService.exchange(exchangeOperation);
         return ResponseEntity.noContent().build();
     }

@@ -1,5 +1,7 @@
 package io.github.grinden.exchange.core.account;
 
+import io.github.grinden.exchange.configuration.EntityNotFoundException;
+import io.github.grinden.exchange.configuration.InvalidExchangeArgument;
 import io.github.grinden.exchange.core.account.model.Account;
 import io.github.grinden.exchange.core.account.model.AccountRepository;
 import io.github.grinden.exchange.core.account.validator.AccountValidator;
@@ -12,7 +14,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public void registerAccount(final Account account) {
+        if (accountRepository.existsById(account.getPesel())) {
+            throw new InvalidExchangeArgument(String.format("Account with PESEL: %s already exist!", account.getPesel()));
+        }
         AccountValidator.validateAge(account.getPesel());
         List<SubAccount> subAccounts = Arrays
                 .stream(CurrencyUnit.values())
@@ -44,6 +48,6 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account getAccount(final String pesel) {
         Optional<Account> account = this.accountRepository.findById(pesel);
-        return account.orElseThrow(() -> new NoSuchElementException("Account not found with pesel: " + pesel));
+        return account.orElseThrow(() -> new EntityNotFoundException("Account not found with pesel: " + pesel));
     }
 }

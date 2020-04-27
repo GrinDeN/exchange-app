@@ -1,5 +1,7 @@
 package io.github.grinden.exchange.core.account.validator;
 
+import io.github.grinden.exchange.configuration.InvalidExchangeArgument;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -10,20 +12,16 @@ public class AccountValidator {
         LocalDate now = LocalDate.now();
         long numberOfYears = ChronoUnit.YEARS.between(birthDate, now);
         if (numberOfYears < 18) {
-            throw new IllegalArgumentException("Illegal argument - age must be equal or over 18");
+            throw new InvalidExchangeArgument("Illegal argument - age must be equal or over 18");
         }
     }
 
     private static LocalDate getBirthDate(String pesel) {
-        int year;
-        int month;
-        int day;
-
-        year = 10 * Integer.parseInt(pesel.substring(0, 1));
+        int year = 10 * Integer.parseInt(pesel.substring(0, 1));
         year += Integer.parseInt(pesel.substring(1, 2));
-        month = 10 * Integer.parseInt(pesel.substring(2, 3));
+        int month = 10 * Integer.parseInt(pesel.substring(2, 3));
         month += Integer.parseInt(pesel.substring(3, 4));
-        day = Integer.parseInt(pesel.substring(4, 6));
+        int day = Integer.parseInt(pesel.substring(4, 6));
 
         if (month > 80 && month < 93) {
             year += 1800;

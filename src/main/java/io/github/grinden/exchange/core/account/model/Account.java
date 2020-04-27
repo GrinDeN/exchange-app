@@ -4,6 +4,8 @@ import io.github.grinden.exchange.core.subaccount.SubAccount;
 import org.hibernate.validator.constraints.pl.PESEL;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -15,11 +17,14 @@ public class Account {
     @PESEL(message = "Please check whether PESEL is correct")
     private String pesel;
 
+    @NotBlank
     private String name;
 
+    @NotBlank
     private String surname;
 
     @Transient
+    @DecimalMin(value = "0.0", inclusive = false)
     private BigDecimal amount;
 
     @OneToMany(cascade = CascadeType.ALL)

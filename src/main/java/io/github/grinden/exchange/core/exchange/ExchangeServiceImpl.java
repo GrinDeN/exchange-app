@@ -1,5 +1,7 @@
 package io.github.grinden.exchange.core.exchange;
 
+import io.github.grinden.exchange.configuration.EntityNotFoundException;
+import io.github.grinden.exchange.configuration.InvalidExchangeArgument;
 import io.github.grinden.exchange.core.account.AccountService;
 import io.github.grinden.exchange.core.account.model.Account;
 import io.github.grinden.exchange.core.currency.CurrencyUnit;
@@ -14,7 +16,6 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -54,14 +55,14 @@ public class ExchangeServiceImpl implements ExchangeService {
                         exchangeOperation.getAmountToTrade(), nbpRate.getRate().getBid());
                 break;
             default:
-                throw new UnsupportedOperationException("Operation is not supported: " + exchangeOperation.getExchangeType());
+                throw new InvalidExchangeArgument("Operation is not supported: " + exchangeOperation.getExchangeType());
         }
     }
 
     private SubAccount getSubaccountInCurrency(Map<CurrencyUnit, SubAccount> subAccountMap, CurrencyUnit currency) {
         return Optional
                 .ofNullable(subAccountMap.get(currency))
-                .orElseThrow(() -> new NoSuchElementException("User does not have subaccount in currency: " + currency));
+                .orElseThrow(() -> new EntityNotFoundException("User does not have subaccount in currency: " + currency));
     }
 
     private void buy(SubAccount from, SubAccount to, BigDecimal amountToBuy, BigDecimal rate) {

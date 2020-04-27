@@ -33,7 +33,7 @@ Above request will buy 20.05 dollars with current buy rate taken from NBP API Se
 funds from PLN account.
 <br> 
 **Attention** - Please remember that you have to have enough funds in PLN to do the transaction! 
-<br><br>
+<br>
 Example SELL body: <br>
 {<br>
     "pesel": "87042051771", <br>
@@ -49,7 +49,8 @@ to PLN subaccount.
 ###### How to build:
 Required JAVA version: 11 <br>
 You can run the application by using 
-<code> ./mvnw spring-boot:run </code> 
+<code> ./mvnw spring-boot:run </code>
+<br>
 Alternatively, you can build the JAR file with 
 <code>./mvnw clean package</code> 
 and then run the JAR file, as follows:
