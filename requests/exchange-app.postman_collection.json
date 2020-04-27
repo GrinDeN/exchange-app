@@ -1,0 +1,116 @@
+{
+	"info": {
+		"_postman_id": "cfb5f810-c7e7-4e09-8c93-584973dddcb9",
+		"name": "exchange-app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "register account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"pesel\": \"87042051771\",\n\t\"name\": \"Jan\",\n\t\"surname\": \"Kowalski\",\n\t\"amount\": 100.05\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/exchange/accounts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"exchange",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "view account",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/exchange/accounts/87042051771",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"exchange",
+						"accounts",
+						"87042051771"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "exchange PLN -> USD",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"pesel\": \"87042051771\",\n\t\"exchangeType\": \"BUY\",\n\t\"currency\": \"USD\",\n\t\"amountToTrade\": 20.05\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/exchange",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"exchange"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "exchange USD -> PLN",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"pesel\": \"87042051771\",\n\t\"exchangeType\": \"SELL\",\n\t\"currency\": \"USD\",\n\t\"amountToTrade\": 20.05\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/exchange",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"exchange"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

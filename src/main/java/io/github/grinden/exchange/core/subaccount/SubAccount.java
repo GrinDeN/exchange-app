@@ -47,11 +47,24 @@ public class SubAccount {
         this.currency = currency;
     }
 
-    public BigDecimal getAmount() {
+    BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(final BigDecimal amount) {
+    void setAmount(final BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public void addFunds(BigDecimal amountToAdd) {
+        BigDecimal updatedAmount = this.amount.add(amountToAdd);
+        this.setAmount(updatedAmount);
+    }
+
+    public void subtractFunds(BigDecimal amountToSubtract) {
+        if (this.amount.compareTo(amountToSubtract) < 0) {
+            throw new RuntimeException("Not enough funds on subaccount in currency: " + this.currency);
+        }
+        BigDecimal updatedAmount = this.amount.subtract(amountToSubtract);
+        this.setAmount(updatedAmount);
     }
 }

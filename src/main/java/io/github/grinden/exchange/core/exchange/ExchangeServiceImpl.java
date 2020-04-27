@@ -4,13 +4,14 @@ import io.github.grinden.exchange.core.account.AccountService;
 import io.github.grinden.exchange.core.account.model.Account;
 import io.github.grinden.exchange.core.currency.CurrencyUnit;
 import io.github.grinden.exchange.core.exchange.model.ExchangeOperation;
+import io.github.grinden.exchange.core.rate.RateService;
+import io.github.grinden.exchange.core.rate.model.NbpRate;
 import io.github.grinden.exchange.core.subaccount.SubAccount;
 import io.github.grinden.exchange.core.subaccount.SubAccountRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -23,10 +24,13 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     private final AccountService accountService;
     private final SubAccountRepository subAccountRepository;
+    private final RateService rateService;
 
-    public ExchangeServiceImpl(final AccountService accountService, final SubAccountRepository subAccountRepository) {
+    public ExchangeServiceImpl(final AccountService accountService, final SubAccountRepository subAccountRepository,
+                               final RateService rateService) {
         this.accountService = accountService;
         this.subAccountRepository = subAccountRepository;
+        this.rateService = rateService;
     }
 
     @Override
@@ -37,41 +41,45 @@ public class ExchangeServiceImpl implements ExchangeService {
                 .getSubAccounts()
                 .stream()
                 .collect(Collectors.toMap(SubAccount::getCurrency, Function.identity()));
+        NbpRate nbpRate = this.rateService.getCurrentRate(exchangeOperation.getCurrency());
         switch (exchangeOperation.getExchangeType()) {
             case BUY:
-                this.buy(subAccountMap, exchangeOperation.getFromCurrency(), exchangeOperation.getToCurrency(), exchangeOperation.getAmountToTrade());
+                this.buy(this.getSubaccountInCurrency(subAccountMap, CurrencyUnit.PLN),
+                        this.getSubaccountInCurrency(subAccountMap, exchangeOperation.getCurrency()),
+                        exchangeOperation.getAmountToTrade(), nbpRate.getRate().getAsk());
                 break;
             case SELL:
+                this.sell(this.getSubaccountInCurrency(subAccountMap, exchangeOperation.getCurrency()),
+                        this.getSubaccountInCurrency(subAccountMap, CurrencyUnit.PLN),
+                        exchangeOperation.getAmountToTrade(), nbpRate.getRate().getBid());
                 break;
+            default:
+                throw new UnsupportedOperationException("Operation is not supported: " + exchangeOperation.getExchangeType());
         }
     }
 
-    private void buy(Map<CurrencyUnit, SubAccount> subAccountMap, CurrencyUnit fromCurrency, CurrencyUnit toCurrency,
-                     BigDecimal amount) {
-        SubAccount fromSubAccount = Optional
-                .ofNullable(subAccountMap.get(fromCurrency))
-                .orElseThrow(() -> new NoSuchElementException("User does not have subaccount with currency: " + fromCurrency));
-        if (amount.compareTo(fromSubAccount.getAmount()) > 0) {
-            throw new RuntimeException("Not enough money on subaccount with currency PLN");
-        }
-        SubAccount toSubAccount = Optional
-                .ofNullable(subAccountMap.get(toCurrency))
-                .orElseThrow(() -> new NoSuchElementException("User does not have subaccount with currency: " + toCurrency));
+    private SubAccount getSubaccountInCurrency(Map<CurrencyUnit, SubAccount> subAccountMap, CurrencyUnit currency) {
+        return Optional
+                .ofNullable(subAccountMap.get(currency))
+                .orElseThrow(() -> new NoSuchElementException("User does not have subaccount in currency: " + currency));
+    }
 
-        BigDecimal exchangeRate = fromCurrency.equals(CurrencyUnit.PLN) ? this.getAskRate(CurrencyUnit.USD) : this.getBidRate(CurrencyUnit.USD);
-        BigDecimal amountInNewCurrency = amount.multiply(exchangeRate);
-        fromSubAccount.setAmount(fromSubAccount.getAmount().subtract(amount));
-        toSubAccount.setAmount(toSubAccount.getAmount().add(amountInNewCurrency));
-        List<SubAccount> subAccounts = List.of(fromSubAccount, toSubAccount);
+    private void buy(SubAccount from, SubAccount to, BigDecimal amountToBuy, BigDecimal rate) {
+        BigDecimal plnAmount = amountToBuy.multiply(rate);
+        this.transfer(from, to, plnAmount, amountToBuy);
+        List<SubAccount> subAccounts = List.of(from, to);
         this.subAccountRepository.saveAll(subAccounts);
     }
 
-    private BigDecimal getBidRate(CurrencyUnit currency) {
-        return new BigDecimal("4.1665");
+    private void sell(SubAccount from, SubAccount to, BigDecimal amountToSell, BigDecimal rate) {
+        BigDecimal plnAmount = amountToSell.multiply(rate);
+        this.transfer(from, to, amountToSell, plnAmount);
+        List<SubAccount> subAccounts = List.of(from, to);
+        this.subAccountRepository.saveAll(subAccounts);
     }
 
-    private BigDecimal getAskRate(CurrencyUnit currency) {
-        return BigDecimal.ONE.setScale(4, RoundingMode.HALF_EVEN)
-                .divide(new BigDecimal("4.2507"), RoundingMode.HALF_EVEN);
+    private void transfer(SubAccount from, SubAccount to, BigDecimal amount, BigDecimal amountInNewCurrency) {
+        from.subtractFunds(amount);
+        to.addFunds(amountInNewCurrency);
     }
 }

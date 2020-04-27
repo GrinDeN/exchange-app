@@ -2,6 +2,7 @@ package io.github.grinden.exchange.core.account;
 
 import io.github.grinden.exchange.core.account.model.Account;
 import io.github.grinden.exchange.core.account.model.AccountRepository;
+import io.github.grinden.exchange.core.account.validator.AccountValidator;
 import io.github.grinden.exchange.core.currency.CurrencyUnit;
 import io.github.grinden.exchange.core.subaccount.SubAccount;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public void registerAccount(final Account account) {
+        AccountValidator.validateAge(account.getPesel());
         List<SubAccount> subAccounts = Arrays
                 .stream(CurrencyUnit.values())
                 .map(currency -> new SubAccount(currency,

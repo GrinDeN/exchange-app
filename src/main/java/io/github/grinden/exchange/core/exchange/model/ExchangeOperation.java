@@ -10,28 +10,19 @@ public class ExchangeOperation {
 
     @PESEL
     private String pesel;
-    private CurrencyUnit fromCurrency;
-    private CurrencyUnit toCurrency;
-    private BigDecimal amountToTrade;
     private ExchangeType exchangeType;
+    private CurrencyUnit currency;
+    private BigDecimal amountToTrade;
 
     ExchangeOperation() {
     }
 
-    public CurrencyUnit getFromCurrency() {
-        return fromCurrency;
+    public CurrencyUnit getCurrency() {
+        return currency;
     }
 
-    void setFromCurrency(final CurrencyUnit fromCurrency) {
-        this.fromCurrency = fromCurrency;
-    }
-
-    public CurrencyUnit getToCurrency() {
-        return toCurrency;
-    }
-
-    void setToCurrency(final CurrencyUnit toCurrency) {
-        this.toCurrency = toCurrency;
+    void setCurrency(final CurrencyUnit currency) {
+        this.currency = currency;
     }
 
     public BigDecimal getAmountToTrade() {
