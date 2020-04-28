@@ -1,6 +1,6 @@
-package io.github.grinden.exchange.core.account.model;
+package io.github.grinden.exchange.domain.account.model;
 
-import io.github.grinden.exchange.core.subaccount.SubAccount;
+import io.github.grinden.exchange.domain.subaccount.SubAccount;
 import org.hibernate.validator.constraints.pl.PESEL;
 
 import javax.persistence.*;
@@ -41,7 +41,7 @@ public class Account {
         this.pesel = pesel;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
@@ -49,7 +49,7 @@ public class Account {
         this.name = name;
     }
 
-    String getSurname() {
+    public String getSurname() {
         return surname;
     }
 

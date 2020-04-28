@@ -1,6 +1,6 @@
-package io.github.grinden.exchange.core.exchange.model;
+package io.github.grinden.exchange.domain.exchange.model;
 
-import io.github.grinden.exchange.core.currency.CurrencyUnit;
+import io.github.grinden.exchange.domain.currency.CurrencyUnit;
 import org.hibernate.validator.constraints.pl.PESEL;
 
 import javax.validation.constraints.DecimalMin;
@@ -18,6 +18,7 @@ public class ExchangeOperation {
     @NotNull
     private CurrencyUnit currency;
 
+    @NotNull
     @DecimalMin(value = "0.0", inclusive = false)
     private BigDecimal amountToTrade;
 

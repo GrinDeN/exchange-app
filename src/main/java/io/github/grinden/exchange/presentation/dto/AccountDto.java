@@ -1,7 +1,7 @@
-package io.github.grinden.exchange.core.account.model;
+package io.github.grinden.exchange.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.github.grinden.exchange.core.subaccount.SubAccountDto;
+import io.github.grinden.exchange.domain.account.model.Account;
 
 import java.util.List;
 import java.util.stream.Collectors;

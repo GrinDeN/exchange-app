@@ -1,4 +1,4 @@
-package io.github.grinden.exchange.core.rate.model;
+package io.github.grinden.exchange.domain.rate.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

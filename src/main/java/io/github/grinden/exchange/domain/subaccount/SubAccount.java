@@ -1,8 +1,8 @@
-package io.github.grinden.exchange.core.subaccount;
+package io.github.grinden.exchange.domain.subaccount;
 
 import io.github.grinden.exchange.configuration.InvalidExchangeArgument;
-import io.github.grinden.exchange.core.account.model.Account;
-import io.github.grinden.exchange.core.currency.CurrencyUnit;
+import io.github.grinden.exchange.domain.account.model.Account;
+import io.github.grinden.exchange.domain.currency.CurrencyUnit;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -48,7 +48,7 @@ public class SubAccount {
         this.currency = currency;
     }
 
-    BigDecimal getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 

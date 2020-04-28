@@ -1,4 +1,4 @@
-package io.github.grinden.exchange.core.currency;
+package io.github.grinden.exchange.domain.currency;
 
 public enum CurrencyUnit {
 

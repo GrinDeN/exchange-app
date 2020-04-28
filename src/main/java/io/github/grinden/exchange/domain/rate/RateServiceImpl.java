@@ -1,8 +1,8 @@
-package io.github.grinden.exchange.core.rate;
+package io.github.grinden.exchange.domain.rate;
 
-import io.github.grinden.exchange.core.currency.CurrencyUnit;
-import io.github.grinden.exchange.core.rate.model.NbpRate;
-import io.github.grinden.exchange.core.rate.model.RateRepository;
+import io.github.grinden.exchange.domain.currency.CurrencyUnit;
+import io.github.grinden.exchange.domain.rate.model.NbpRate;
+import io.github.grinden.exchange.domain.rate.model.RateRepository;
 import org.springframework.stereotype.Service;
 
 @Service

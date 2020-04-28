@@ -1,4 +1,4 @@
-package io.github.grinden.exchange.core.account.validator;
+package io.github.grinden.exchange.domain.account.validator;
 
 import io.github.grinden.exchange.configuration.InvalidExchangeArgument;
 

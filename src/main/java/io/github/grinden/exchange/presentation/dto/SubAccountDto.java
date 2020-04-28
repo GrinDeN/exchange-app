@@ -1,7 +1,8 @@
-package io.github.grinden.exchange.core.subaccount;
+package io.github.grinden.exchange.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.github.grinden.exchange.core.currency.CurrencyUnit;
+import io.github.grinden.exchange.domain.currency.CurrencyUnit;
+import io.github.grinden.exchange.domain.subaccount.SubAccount;
 
 import java.math.BigDecimal;
 

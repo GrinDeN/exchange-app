@@ -1,15 +1,15 @@
-package io.github.grinden.exchange.core.exchange;
+package io.github.grinden.exchange.domain.exchange;
 
 import io.github.grinden.exchange.configuration.EntityNotFoundException;
 import io.github.grinden.exchange.configuration.InvalidExchangeArgument;
-import io.github.grinden.exchange.core.account.AccountService;
-import io.github.grinden.exchange.core.account.model.Account;
-import io.github.grinden.exchange.core.currency.CurrencyUnit;
-import io.github.grinden.exchange.core.exchange.model.ExchangeOperation;
-import io.github.grinden.exchange.core.rate.RateService;
-import io.github.grinden.exchange.core.rate.model.NbpRate;
-import io.github.grinden.exchange.core.subaccount.SubAccount;
-import io.github.grinden.exchange.core.subaccount.SubAccountRepository;
+import io.github.grinden.exchange.domain.account.AccountService;
+import io.github.grinden.exchange.domain.account.model.Account;
+import io.github.grinden.exchange.domain.currency.CurrencyUnit;
+import io.github.grinden.exchange.domain.exchange.model.ExchangeOperation;
+import io.github.grinden.exchange.domain.rate.RateService;
+import io.github.grinden.exchange.domain.rate.model.NbpRate;
+import io.github.grinden.exchange.domain.subaccount.SubAccount;
+import io.github.grinden.exchange.domain.subaccount.SubAccountRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

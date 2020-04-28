@@ -1,4 +1,4 @@
-package io.github.grinden.exchange.core.account.model;
+package io.github.grinden.exchange.domain.account.model;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

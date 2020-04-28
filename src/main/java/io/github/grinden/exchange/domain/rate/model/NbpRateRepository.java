@@ -1,17 +1,22 @@
-package io.github.grinden.exchange.core.rate.model;
+package io.github.grinden.exchange.domain.rate.model;
 
 import io.github.grinden.exchange.configuration.InvalidExchangeArgument;
 import io.github.grinden.exchange.configuration.ServiceUnavailableException;
-import io.github.grinden.exchange.core.currency.CurrencyUnit;
+import io.github.grinden.exchange.domain.currency.CurrencyUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
 @Component
 public class NbpRateRepository implements RateRepository {
@@ -20,19 +25,24 @@ public class NbpRateRepository implements RateRepository {
 
     private final Logger LOG = LoggerFactory.getLogger(NbpRateRepository.class);
 
+    private final RestTemplate restTemplate = new RestTemplateBuilder()
+            .setConnectTimeout(Duration.of(15, ChronoUnit.SECONDS))
+            .setReadTimeout(Duration.of(5, ChronoUnit.SECONDS))
+            .build();
+
     @Override
     @Cacheable("rates")
     public NbpRate getRateFromNbp(final CurrencyUnit currency) {
-        RestTemplate restTemplate = new RestTemplate();
         String url = String.format(NBP_URL, currency);
-        ResponseEntity<NbpRate> response = restTemplate.getForEntity(url, NbpRate.class);
-        if (response.getStatusCode() == HttpStatus.SERVICE_UNAVAILABLE) {
-            throw new ServiceUnavailableException(String.format("Cannot get rate for %s - service is unavailable", currency));
-        }
-        if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
+        try {
+            ResponseEntity<NbpRate> response = this.restTemplate.getForEntity(url, NbpRate.class);
+            if (response.getStatusCode() == HttpStatus.SERVICE_UNAVAILABLE) {
+                throw new ServiceUnavailableException(String.format("Cannot get rate for %s - service is unavailable", currency));
+            }
+            return response.getBody();
+        } catch (HttpClientErrorException e) {
             throw new InvalidExchangeArgument(String.format("Cannot get rate - currency %s is invalid", currency));
         }
-        return response.getBody();
     }
 
     @Scheduled(cron = "0 20 8 * * MON-FRI")

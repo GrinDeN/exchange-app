@@ -1,10 +1,10 @@
 package io.github.grinden.exchange.presentation;
 
-import io.github.grinden.exchange.core.account.AccountService;
-import io.github.grinden.exchange.core.account.model.Account;
-import io.github.grinden.exchange.core.account.model.AccountDto;
-import io.github.grinden.exchange.core.exchange.ExchangeService;
-import io.github.grinden.exchange.core.exchange.model.ExchangeOperation;
+import io.github.grinden.exchange.domain.account.AccountService;
+import io.github.grinden.exchange.domain.account.model.Account;
+import io.github.grinden.exchange.domain.exchange.ExchangeService;
+import io.github.grinden.exchange.domain.exchange.model.ExchangeOperation;
+import io.github.grinden.exchange.presentation.dto.AccountDto;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,19 +24,19 @@ public class ExchangeEndpoint {
     }
 
     @PostMapping(path = "/accounts", consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> registerAccount(@RequestBody @Valid Account account) {
+    ResponseEntity<Void> registerAccount(@RequestBody @Valid Account account) {
         this.accountService.registerAccount(account);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(path = "/accounts/{pesel}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> viewAccount(@PathVariable String pesel) {
+    ResponseEntity<AccountDto> viewAccount(@PathVariable String pesel) {
         AccountDto account = AccountDto.of(this.accountService.getAccount(pesel));
         return ResponseEntity.ok(account);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> exchangeCurrency(@RequestBody @Valid ExchangeOperation exchangeOperation) {
+    ResponseEntity<Void> exchangeCurrency(@RequestBody @Valid ExchangeOperation exchangeOperation) {
         this.exchangeService.exchange(exchangeOperation);
         return ResponseEntity.noContent().build();
     }
