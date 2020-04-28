@@ -31,19 +31,16 @@ Example BUY body: <br>
 }<br>
 Above request will buy 20.05 dollars with current buy rate taken from NBP API Service and takes
 funds from PLN account.
-<br> 
-**Attention** - Please remember that you have to have enough funds in PLN to do the transaction! 
-<br>
+**Attention** - Please remember that you have to have enough funds in PLN to do the transaction!<br><br>
 Example SELL body: <br>
 {<br>
     "pesel": "87042051771", <br>
-    "exchangeType": "BUY", <br>
+    "exchangeType": "SELL", <br>
     "currency": "USD", <br>
     "amount": 10.75 <br>
 }<br>
 Above request will sell 10.75 dollars with current sell rate taken from NBP API Service and add proper amount
 to PLN subaccount.
-<br> 
 **Attention** - Please remember that you have to have enough funds in USD to do the transaction!
 
 ###### How to build:
