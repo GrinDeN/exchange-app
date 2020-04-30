@@ -5,6 +5,8 @@ import io.github.grinden.exchange.domain.rate.model.NbpRate;
 import io.github.grinden.exchange.domain.rate.model.RateRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class RateServiceImpl implements RateService {
 
@@ -15,7 +17,7 @@ public class RateServiceImpl implements RateService {
     }
 
     @Override
-    public NbpRate getCurrentRate(final CurrencyUnit currency) {
-        return this.rateRepository.getRateFromNbp(currency);
+    public NbpRate getCurrentRate(final CurrencyUnit currency, final LocalDate date) {
+        return this.rateRepository.getRate(currency, date);
     }
 }

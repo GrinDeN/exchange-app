@@ -1,11 +1,8 @@
 package io.github.grinden.exchange.domain.exchange;
 
 import io.github.grinden.exchange.configuration.EntityNotFoundException;
-import io.github.grinden.exchange.configuration.InvalidExchangeArgument;
-import io.github.grinden.exchange.domain.account.AccountService;
-import io.github.grinden.exchange.domain.account.model.Account;
+import io.github.grinden.exchange.configuration.InvalidExchangeArgumentException;
 import io.github.grinden.exchange.domain.currency.CurrencyUnit;
-import io.github.grinden.exchange.domain.exchange.model.ExchangeOperation;
 import io.github.grinden.exchange.domain.rate.RateService;
 import io.github.grinden.exchange.domain.rate.model.NbpRate;
 import io.github.grinden.exchange.domain.subaccount.SubAccount;
@@ -14,35 +11,27 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class ExchangeServiceImpl implements ExchangeService {
 
-    private final AccountService accountService;
     private final SubAccountRepository subAccountRepository;
     private final RateService rateService;
 
-    public ExchangeServiceImpl(final AccountService accountService, final SubAccountRepository subAccountRepository,
+    public ExchangeServiceImpl(final SubAccountRepository subAccountRepository,
                                final RateService rateService) {
-        this.accountService = accountService;
         this.subAccountRepository = subAccountRepository;
         this.rateService = rateService;
     }
 
     @Override
     @Transactional
-    public void exchange(ExchangeOperation exchangeOperation) {
-        Account account = this.accountService.getAccount(exchangeOperation.getPesel());
-        Map<CurrencyUnit, SubAccount> subAccountMap = account
-                .getSubAccounts()
-                .stream()
-                .collect(Collectors.toMap(SubAccount::getCurrency, Function.identity()));
-        NbpRate nbpRate = this.rateService.getCurrentRate(exchangeOperation.getCurrency());
+    public void exchange(ExchangeOperation exchangeOperation, final Map<CurrencyUnit, SubAccount> subAccountMap) {
+        NbpRate nbpRate = this.rateService.getCurrentRate(exchangeOperation.getCurrency(), LocalDate.now());
         switch (exchangeOperation.getExchangeType()) {
             case BUY:
                 this.buy(this.getSubaccountInCurrency(subAccountMap, CurrencyUnit.PLN),
@@ -55,7 +44,7 @@ public class ExchangeServiceImpl implements ExchangeService {
                         exchangeOperation.getAmountToTrade(), nbpRate.getRate().getBid());
                 break;
             default:
-                throw new InvalidExchangeArgument("Operation is not supported: " + exchangeOperation.getExchangeType());
+                throw new InvalidExchangeArgumentException("Operation is not supported: " + exchangeOperation.getExchangeType());
         }
     }
 

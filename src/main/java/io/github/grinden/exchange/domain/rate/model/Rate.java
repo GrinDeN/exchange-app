@@ -13,6 +13,11 @@ public class Rate {
     Rate() {
     }
 
+    public Rate(BigDecimal bid, BigDecimal ask) {
+        this.bid = bid;
+        this.ask = ask;
+    }
+
     String getNo() {
         return no;
     }

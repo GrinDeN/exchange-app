@@ -1,15 +1,20 @@
 package io.github.grinden.exchange.presentation;
 
+import io.github.grinden.exchange.domain.account.Account;
 import io.github.grinden.exchange.domain.account.AccountService;
-import io.github.grinden.exchange.domain.account.model.Account;
+import io.github.grinden.exchange.domain.currency.CurrencyUnit;
+import io.github.grinden.exchange.domain.exchange.ExchangeOperation;
 import io.github.grinden.exchange.domain.exchange.ExchangeService;
-import io.github.grinden.exchange.domain.exchange.model.ExchangeOperation;
+import io.github.grinden.exchange.domain.subaccount.SubAccount;
 import io.github.grinden.exchange.presentation.dto.AccountDto;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/exchange")
@@ -37,7 +42,12 @@ public class ExchangeEndpoint {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<Void> exchangeCurrency(@RequestBody @Valid ExchangeOperation exchangeOperation) {
-        this.exchangeService.exchange(exchangeOperation);
+        Account account = this.accountService.getAccount(exchangeOperation.getPesel());
+        Map<CurrencyUnit, SubAccount> subAccounts = account
+                .getSubAccounts()
+                .stream()
+                .collect(Collectors.toMap(SubAccount::getCurrency, Function.identity()));
+        this.exchangeService.exchange(exchangeOperation, subAccounts);
         return ResponseEntity.noContent().build();
     }
 }

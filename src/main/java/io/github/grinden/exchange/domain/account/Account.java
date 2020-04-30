@@ -1,4 +1,4 @@
-package io.github.grinden.exchange.domain.account.model;
+package io.github.grinden.exchange.domain.account;
 
 import io.github.grinden.exchange.domain.subaccount.SubAccount;
 import org.hibernate.validator.constraints.pl.PESEL;
@@ -37,7 +37,7 @@ public class Account {
         return pesel;
     }
 
-    void setPesel(final String pesel) {
+    public void setPesel(final String pesel) {
         this.pesel = pesel;
     }
 

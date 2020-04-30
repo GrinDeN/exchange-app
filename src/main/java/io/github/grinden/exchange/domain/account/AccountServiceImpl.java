@@ -1,8 +1,7 @@
 package io.github.grinden.exchange.domain.account;
 
 import io.github.grinden.exchange.configuration.EntityNotFoundException;
-import io.github.grinden.exchange.configuration.InvalidExchangeArgument;
-import io.github.grinden.exchange.domain.account.model.Account;
+import io.github.grinden.exchange.configuration.InvalidExchangeArgumentException;
 import io.github.grinden.exchange.domain.account.model.AccountRepository;
 import io.github.grinden.exchange.domain.account.validator.AccountValidator;
 import io.github.grinden.exchange.domain.currency.CurrencyUnit;
@@ -30,7 +29,7 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public void registerAccount(final Account account) {
         if (accountRepository.existsById(account.getPesel())) {
-            throw new InvalidExchangeArgument(String.format("Account with PESEL: %s already exist!", account.getPesel()));
+            throw new InvalidExchangeArgumentException(String.format("Account with PESEL: %s already exist!", account.getPesel()));
         }
         AccountValidator.validateAge(account.getPesel());
         List<SubAccount> subAccounts = Arrays

@@ -1,6 +1,6 @@
 package io.github.grinden.exchange.domain.account.validator;
 
-import io.github.grinden.exchange.configuration.InvalidExchangeArgument;
+import io.github.grinden.exchange.configuration.InvalidExchangeArgumentException;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -12,7 +12,7 @@ public class AccountValidator {
         LocalDate now = LocalDate.now();
         long numberOfYears = ChronoUnit.YEARS.between(birthDate, now);
         if (numberOfYears < 18) {
-            throw new InvalidExchangeArgument("Illegal argument - age must be equal or over 18");
+            throw new InvalidExchangeArgumentException("Illegal argument - age must be equal or over 18");
         }
     }
 

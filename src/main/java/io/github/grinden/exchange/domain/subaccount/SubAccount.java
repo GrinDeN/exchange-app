@@ -1,7 +1,7 @@
 package io.github.grinden.exchange.domain.subaccount;
 
-import io.github.grinden.exchange.configuration.InvalidExchangeArgument;
-import io.github.grinden.exchange.domain.account.model.Account;
+import io.github.grinden.exchange.configuration.InvalidExchangeArgumentException;
+import io.github.grinden.exchange.domain.account.Account;
 import io.github.grinden.exchange.domain.currency.CurrencyUnit;
 
 import javax.persistence.*;
@@ -63,7 +63,7 @@ public class SubAccount {
 
     public void subtractFunds(BigDecimal amountToSubtract) {
         if (this.amount.compareTo(amountToSubtract) < 0) {
-            throw new InvalidExchangeArgument("Not enough funds on subaccount in currency: " + this.currency);
+            throw new InvalidExchangeArgumentException("Not enough funds on subaccount in currency: " + this.currency);
         }
         BigDecimal updatedAmount = this.amount.subtract(amountToSubtract);
         this.setAmount(updatedAmount);

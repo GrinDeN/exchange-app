@@ -1,6 +1,7 @@
-package io.github.grinden.exchange.domain.exchange.model;
+package io.github.grinden.exchange.domain.exchange;
 
 import io.github.grinden.exchange.domain.currency.CurrencyUnit;
+import io.github.grinden.exchange.domain.exchange.model.ExchangeType;
 import org.hibernate.validator.constraints.pl.PESEL;
 
 import javax.validation.constraints.DecimalMin;

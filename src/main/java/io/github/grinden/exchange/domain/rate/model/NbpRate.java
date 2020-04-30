@@ -12,6 +12,10 @@ public class NbpRate {
     NbpRate() {
     }
 
+    public NbpRate(List<Rate> rates) {
+        this.rates = rates;
+    }
+
     String getTable() {
         return table;
     }
